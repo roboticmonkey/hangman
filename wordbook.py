@@ -33,7 +33,7 @@ class Wordbook(object):
             rand_num = random.randint(0, len(self.book)-1)
 
         self.indexes.add(rand_num)
-        secret_word = list(str(self.book[rand_num]))
+        secret_word = list(self.book[rand_num])
 
         return secret_word
 
