@@ -1,7 +1,9 @@
 
-def print_word(word):
-    """Takes a list of chars and prints as a string"""
-    print ''.join(word)
+def convert_to_string(word):
+    """Takes a list of chars and returns as a string"""
+    
+    return ''.join(word)
+
 
 def request_letter():
     """ Requests a letter and Returns a valid lowercase letter between
@@ -38,4 +40,12 @@ def update_guess(indexes, letter, guess):
         guess[i] = letter
 
     return guess
+
+def game_over(num_guesses, secret_word, guess):
+
+    if num_guesses > 0 and secret_word != guess:
+        return False
+
+    return True
+
 
