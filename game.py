@@ -21,7 +21,7 @@ class Hangman (object):
     def set_guess(self):
         self.guess = ['_'] * len(self.secret_word)
 
-
+    
     def game_over(self):
 
         if self.num_guesses > 0 and self.secret_word != self.guess:
