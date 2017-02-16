@@ -20,32 +20,32 @@ def request_letter():
 
     return letter
 
-def find_letter_in_word(letter, secret_word):
-    """ Looks for letter in word
-        Returns [] of matching indexes, Empty [] = Not found """
+# def find_letter_in_word(letter, secret_word):
+#     """ Looks for letter in word
+#         Returns [] of matching indexes, Empty [] = Not found """
 
-    index = []
+#     index = []
 
-    for i, char in enumerate(secret_word):
-        if char == letter:
-            index.append(i)
+#     for i, char in enumerate(secret_word):
+#         if char == letter:
+#             index.append(i)
 
-    return index
+#     return index
 
-def update_guess(indexes, letter, guess):
-    """ Replaces '_' with letter at indexes of guess 
-        Returns updated guess """
+# def update_guess(indexes, letter, guess):
+#     """ Replaces '_' with letter at indexes of guess 
+#         Returns updated guess """
 
-    for i in indexes:
-        guess[i] = letter
+#     for i in indexes:
+#         guess[i] = letter
 
-    return guess
+#     return guess
 
-def game_over(num_guesses, secret_word, guess):
+# def game_over(num_guesses, secret_word, guess):
 
-    if num_guesses > 0 and secret_word != guess:
-        return False
+#     if num_guesses > 0 and secret_word != guess:
+#         return False
 
-    return True
+#     return True
 
 
