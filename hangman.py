@@ -21,6 +21,10 @@ class Hangman (object):
     def set_guess(self):
         self.guess = ['_'] * len(self.secret_word)
 
+    def new_game(self):
+        self.set_dictionary()
+        self.set_secret_word()
+        self.set_guess()
     
     def game_over(self):
 
