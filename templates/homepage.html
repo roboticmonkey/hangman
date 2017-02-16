@@ -6,14 +6,21 @@
     </head>
 
     <body>
-        <h1>Lets Play Hangman!</h1>
+        <h1>Welcome to Hangperson!</h1>
 
         <p>
             <a href="/start">Start Game</a>
-
-            {% if word %}
-                {{word}}
-            {% endif %}
+            <form action="/start_game">
+                <label for="name-input">Name:</label>
+                <input type="text" name="name", id="name-input" /> <br>
+                <label for="difficulty">Difficulty:</label><br>
+                <input type="radio" name="difficulty" value="None" checked>Random<br>
+                <input type="radio" name="difficulty" value="3" >Easy<br>
+                <input type="radio" name="difficulty" value="6" >Medium<br>
+                <input type="radio" name="difficulty" value="9" >Hard<br>
+                <input type="submit">
+            </form>
+           
         </p>
     </body>
 
