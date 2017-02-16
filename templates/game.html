@@ -9,14 +9,28 @@
         <h1>Welcome to Hangperson!</h1>
 
         <div id="main">
-            <div id="hang"></div>
-            <div id="mistake"></div>
+            <div id="hang">
+                <h2>Guesses Left</h2>
+                <p> {{ num_guesses }} </p>
+            </div>
+            <div id="mistake">
+                <h2>Wrong Letters</h2>
+                {% if missed %}
+                <ul>
+                    {% for each in missed %}
+                    <li>
+                        {{ each }}
+                    </li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+            </div>
         </div>
         <div id="word"> {{ guess }}</div>
 
         <p>
 
-            <form action="/take_turn">
+            <form action="/take_turn" method="POST">
                 <label for="letter-input">Enter a Letter:</label>
                 <input type="text" name="letter", id="letter-input" /> <br>
                 
