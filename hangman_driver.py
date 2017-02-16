@@ -1,5 +1,6 @@
 import wordbook
 import utilities as util
+import game
 
 # Create a list of words to select from
 dictionary = wordbook.Wordbook()
