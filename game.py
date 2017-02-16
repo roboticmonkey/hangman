@@ -10,5 +10,15 @@ class Hangman (object):
         self.guess = None
         self.missed_letters = None
         self.guesses = set()
+        self.num_of_guesses = 6
+
+    def set_dictionary(self):
+        self.dictionary.create_wordbook()
+
+    def get_secret_word(self):
+        self.secret_word = self.dictionary.select_word()
+
+    def set_guess(self):
+        self.guess = ['_'] * len(self.secret_word)
 
     
