@@ -3,6 +3,7 @@
 <html>
     <head>
         <title>Hangman</title>
+        <link href="/static/stylesheet.css" rel="stylesheet">
     </head>
 
     <body>
@@ -12,9 +13,10 @@
             <div id="hang">
                 <h2>Guesses Left</h2>
                 <p> {{ num_guesses }} </p>
+                <img src="/static/{{ num_guesses }}.svg" alt="Hangman graffic">
             </div>
             <div id="mistake">
-                <h2>Wrong Letters</h2>
+                <h2>Letters Used</h2>
                 {% if missed %}
                 <ul>
                     {% for each in missed %}
