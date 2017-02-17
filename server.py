@@ -33,10 +33,6 @@ def start_game():
     num = 6
     # set/reset session vars 
     session['num_left'] = num
-    # session['letters'] = []
-    # session['guess'] =[]
-    # session['id'] = None
-    # session['secret_word'] = []
 
     # Generate the wordlist via api
     words = generate_wordlist()
@@ -226,8 +222,8 @@ def update_guess(guess, indexes, letter):
 if __name__ == "__main__":
     # We have to set debug=True here, since it has to be True at the point
     # that we invoke the DebugToolbarExtension
-    app.debug = True
-    # app.debug = False
+    # app.debug = True
+    app.debug = False
 
     connect_to_db(app)
 
