@@ -1,10 +1,10 @@
 """ Server File """
 
 from jinja2 import StrictUndefined
-from flask import Flask, render_template, session
+from flask import Flask, render_template, session, request
 from flask_debugtoolbar import DebugToolbarExtension
 import random
-import hangman
+# import hangman
 import utilities as util
 from model import connect_to_db, Wordbook, db, Used_index, generate_wordlist
 
@@ -26,6 +26,8 @@ def index():
 def start_game():
     
     num = 6
+    session['num_left'] = num
+    session['letters'] = []
 
     # Generate the wordlist via api
     words = generate_wordlist()
@@ -54,27 +56,39 @@ def start_game():
 
 @app.route('/take_turn', methods=['POST'])
 def playing_game():
-    while not game.game_over():
+    num = session['num_left']
+    secret_word = session['secret_word']
+    guess = session['guess']
+    
+    letters = session['letters']
+    
+
+    if not game_over(num, secret_word, guess):
 
         letter = request.form.get('letter')
 
-        # while letter in game.guesses:
+        # while letter in letter:
         #     letter = util.request_letter()
 
-        game.guesses.add(letter)
+        letters.append(letter)
 
-        indexes = game.find_letter_in_word(letter)
+        indexes = find_letter_in_word(secret_word, letter)
 
         if indexes:
-            game.update_guess(indexes, letter)
+            guess = update_guess(guess,indexes, letter)
+            session['guess'] = guess
             
 
         else:
-            game.update_num_guesses()
-            game.update_missed(letter)
+            num -= 1
+            session['num_left'] = num
+        
+        
+        session['letters'] = letters
 
+    guess_word = convert_to_string(guess)
 
-    return render_template('game.html', guess=guess, missed=missed)
+    return render_template('game.html', guess=guess_word, missed=letters,num_guesses=num)
 
 #############
 # Helper Functions
@@ -121,6 +135,36 @@ def convert_to_string(char_list):
     """Takes a list of chars and returns as a string"""
     
     return ''.join(char_list)
+
+def game_over(num_guesses, secret_word, guess):
+    """Checks if game is over. Returns True if Over.
+        False if not Over."""
+
+    if num_guesses > 0 and secret_word != guess:
+        return False
+
+    return True
+
+def find_letter_in_word(secret_word, letter):
+    """ Looks for letter in secret_word
+        Returns [] of matching indexes, Empty [] = None found """
+
+    index = []
+
+    for i, char in enumerate(secret_word):
+        if char == letter:
+            index.append(i)
+
+    return index 
+
+def update_guess(guess, indexes, letter):
+    """ Replaces '_' with letter at indexes of guess 
+        Returns updated guess """
+
+    for i in indexes:
+        guess[i] = letter
+
+    return guess
 
 if __name__ == "__main__":
     # We have to set debug=True here, since it has to be True at the point
