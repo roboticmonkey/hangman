@@ -20,14 +20,23 @@ app.jinja_env.undifined = StrictUndefined
 
 @app.route('/')
 def index():
+    session['num_left'] = None
+    session['letters'] = []
+    session['guess'] =[]
+    session['id'] = None
+    session['secret_word'] = []
     return render_template('homepage.html')
 
 @app.route('/start_game', methods=['POST'])
 def start_game():
     
     num = 6
+    # set/reset session vars 
     session['num_left'] = num
-    session['letters'] = []
+    # session['letters'] = []
+    # session['guess'] =[]
+    # session['id'] = None
+    # session['secret_word'] = []
 
     # Generate the wordlist via api
     words = generate_wordlist()
@@ -54,6 +63,34 @@ def start_game():
 
     return render_template('game.html', guess=guess, num_guesses=num)
 
+@app.route('/new_word')
+def new_word():
+    
+    num = 6
+    # set/reset session vars 
+    session['num_left'] = num
+    session['letters'] = []
+    session['guess'] =[]
+    # session['id'] = None
+    session['secret_word'] = []
+
+    # Retrive wordbook from db
+    old_book = Wordbook.query.filter_by(wordbook_id=session['id']).first()
+
+    # Select a new secret word from wordbook
+    secret_word = select_word(old_book)
+    session['secret_word'] = secret_word
+
+    # Generate a guess word based on secret word length
+    guess_list = ['_'] * len(secret_word)
+
+    # Save guess in session var
+    session['guess'] = guess_list
+
+    guess = convert_to_string(guess_list)
+
+    return render_template('game.html', guess=guess, num_guesses=num)
+
 @app.route('/take_turn', methods=['POST'])
 def playing_game():
     num = session['num_left']
@@ -61,6 +98,7 @@ def playing_game():
     guess = session['guess']
     
     letters = session['letters']
+    
     
 
     if not game_over(num, secret_word, guess):
@@ -88,7 +126,17 @@ def playing_game():
 
     guess_word = convert_to_string(guess)
 
-    return render_template('game.html', guess=guess_word, missed=letters,num_guesses=num)
+    over = game_over(num, secret_word, guess)
+    winner = is_winner(num, secret_word, guess)
+    secret = convert_to_string(secret_word)
+
+    return render_template('game.html', 
+                            guess=guess_word, 
+                            missed=letters,
+                            num_guesses=num,
+                            win=winner,
+                            over=over,
+                            secret=secret)
 
 #############
 # Helper Functions
@@ -144,6 +192,15 @@ def game_over(num_guesses, secret_word, guess):
         return False
 
     return True
+
+def is_winner(num_guesses, secret_word, guess):
+    """Checks if Player won. Returns True if Won.
+        False if lost."""
+
+    if num_guesses > 0 and secret_word == guess:
+        return True
+
+    return False
 
 def find_letter_in_word(secret_word, letter):
     """ Looks for letter in secret_word
