@@ -18,44 +18,58 @@ class Wordbook(db.Model):
 
     wordbook_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     book = db.Column(db.Text, nullable=False)
-    indexes = db.Column(db.Text, nullable=True)
+    
 
-    def __init__(self, book=None):
+    def __init__(self, book):
         """creates Wordbook object"""
         self.book = book
-        # self.indexes = set()
-        self.indexes = []
+        
 
+    # def select_word(self):
+    #     """ Selects a psudo-random word from the book
+    #         Returns a list object of word. ie. 'ant' = ['a','n','t']"""
 
-    def create_wordbook(self):
-        """accesses API to retrieve list of words"""
+    #     rand_num = random.randint(0, len(self.book)-1)
 
-        payload = {'difficulty': None,
-                    'minLength': None,
-                    'maxLength': None,
-                    'start': 162410,
-                    'count': None}
-        r = requests.get('http://linkedin-reach.hagbpyjegb.us-west-2.elasticbeanstalk.com/words', params=payload)
+    #     while rand_num in self.indexes:
+    #         rand_num = random.randint(0, len(self.book)-1)
 
-        # self.book = r.text.split()
-        self.book = r.text
+    #     self.indexes.add(rand_num)
+    #     secret_word = list(self.book[rand_num])
 
-    def select_word(self):
-        """ Selects a psudo-random word from the book
-            Returns a list object of word. ie. 'ant' = ['a','n','t']"""
+    #     return secret_word
 
-        rand_num = random.randint(0, len(self.book)-1)
+class Used_index(db.Model):
+    """indexes used for accessing words from dictionary"""
 
-        while rand_num in self.indexes:
-            rand_num = random.randint(0, len(self.book)-1)
+    __tablename__ = "used_index"
 
-        self.indexes.add(rand_num)
-        secret_word = list(self.book[rand_num])
+    used_index_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+    index_num = db.Column(db.Integer, nullable=False)
 
-        return secret_word
+    wordbook_id = db.Column(db.Integer, db.ForeignKey('wordbook.wordbook_id'))
+
+    # Relationships
+    wordbook = db.relationship('Wordbook', backref='Used_index')
+    
+
 
 ######################
 # Helper functions
+
+def generate_wordlist():
+    """access API to retrieve list of words"""
+
+    payload = {'difficulty': None,
+                'minLength': None,
+                'maxLength': None,
+                'start': 162410,
+                'count': None}
+    r = requests.get('http://linkedin-reach.hagbpyjegb.us-west-2.elasticbeanstalk.com/words', params=payload)
+
+    # self.book = r.text.split()
+    wordlist = r.text
+    return wordlist
 
 def connect_to_db(app):
     """Connect the database to our Flask app."""
