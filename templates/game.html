@@ -26,10 +26,11 @@
                 {% endif %}
             </div>
         </div>
+        
         <div id="word"> {{ guess }}</div>
 
-        <p>
-
+        
+        {% if not over %}
             <form action="/take_turn" method="POST">
                 <label for="letter-input">Enter a Letter:</label>
                 <input type="text" name="letter", id="letter-input" /> <br>
@@ -37,7 +38,19 @@
                 <input type="submit">
             </form>
            
-        </p>
+        {% endif %}
+        {% if over %}
+            {%  if win %}
+            <h2>You Win!</h2>
+            {% else %}
+            <h2>Sorry, You Lose!</h2>
+            {% endif %}
+
+        <div>
+            <a href="/new_word">New Word</a>
+            <a href="/start">Exit</a>
+        </div>
+        {% endif %}
     </body>
 
 </html>
