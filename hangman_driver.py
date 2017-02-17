@@ -1,49 +1,43 @@
-import wordbook
+import hangman
 import utilities as util
-import game
 
-# Create a list of words to select from
-dictionary = wordbook.Wordbook()
-dictionary.create_wordbook()
+game = hangman.Hangman()
 
-secret_word = dictionary.select_word()
-print secret_word
-
-guess = ['_'] * len(secret_word)
-print guess
-
-print util.convert_to_string(guess)
-
-number_of_guesses = 6
-missed = []
-guesses = set()
+game.new_game()
 
 
-while not util.game_over(number_of_guesses, secret_word, guess):
-    print number_of_guesses, "guess left."
-    if missed:
-        print "already guessed", missed
+print util.convert_to_string(game.secret_word)
 
-   
+print util.convert_to_string(game.guess)
+
+
+while not game.game_over():
+    print game.num_guesses, "guesses left."
+    if game.missed_letters:
+            print "already guessed", util.convert_to_string(game.missed_letters)
+
     letter = util.request_letter()
 
-    while letter in guesses:
-
+    while letter in game.guesses:
         letter = util.request_letter()
 
-    guesses.add(letter)
+    game.guesses.add(letter)
 
-    indexes = util.find_letter_in_word(letter, secret_word)
+    indexes = game.find_letter_in_word(letter)
 
     if indexes:
-        guess = util.update_guess(indexes, letter, guess)
-        print util.convert_to_string(guess)
+        game.update_guess(indexes, letter)
+        print util.convert_to_string(game.guess)
+
     else:
-        number_of_guesses -=1
-        missed.append(letter)
+        game.update_num_guesses()
+        game.update_missed(letter)
+
       
-s = util.convert_to_string(guess)
-if number_of_guesses > 0:
+s = util.convert_to_string(game.guess)
+if game.num_guesses > 0:
     print "You won! The word was %s!" %(s)
 else:
     print "Too Bad!"
+
+
