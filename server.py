@@ -4,7 +4,7 @@ from jinja2 import StrictUndefined
 from flask import Flask, render_template, session, request
 from flask_debugtoolbar import DebugToolbarExtension
 import random
-# import hangman
+
 import utilities as util
 from model import connect_to_db, Wordbook, db, Used_index, generate_wordlist
 
