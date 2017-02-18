@@ -43,13 +43,13 @@ class Used_index(db.Model):
 ######################
 # Helper functions
 
-def generate_wordlist():
+def generate_wordlist(difficulty):
     """access API to retrieve list of words"""
 
-    payload = {'difficulty': None,
-                'minLength': None,
+    payload = {'difficulty': difficulty,
+                'minLength': 4,
                 'maxLength': None,
-                'start': 162410,
+                'start': None,
                 'count': None}
     r = requests.get('http://linkedin-reach.hagbpyjegb.us-west-2.elasticbeanstalk.com/words', params=payload)
 

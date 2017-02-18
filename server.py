@@ -1,7 +1,7 @@
 """ Server File """
 
 from jinja2 import StrictUndefined
-from flask import Flask, render_template, session, request
+from flask import Flask, render_template, session, request, redirect, flash
 from flask_debugtoolbar import DebugToolbarExtension
 import random
 
@@ -30,12 +30,13 @@ def index():
 @app.route('/start_game', methods=['POST'])
 def start_game():
     
+    difficulty = request.form.get('difficulty')
     num = 6
     # set/reset session vars 
     session['num_left'] = num
 
     # Generate the wordlist via api
-    words = generate_wordlist()
+    words = generate_wordlist(difficulty)
     
     # Create a wordbook object, add to db
     new_dic = Wordbook(book=words)
@@ -100,9 +101,27 @@ def playing_game():
     if not game_over(num, secret_word, guess):
 
         letter = request.form.get('letter')
+        letter = clean_data(letter)
+        
+        if is_dupilicate(letter, letters):
+            flash("You already tried that one.")
+            guess_word = convert_to_string(guess)
+            
+            return render_template('game.html', 
+                            guess=guess_word, 
+                            missed=letters,
+                            num_guesses=num)
 
-        # while letter in letter:
-        #     letter = util.request_letter()
+        
+        if not letter.isalpha():
+            flash("You must enter only letters.")
+            guess_word = convert_to_string(guess)
+            
+            return render_template('game.html', 
+                            guess=guess_word, 
+                            missed=letters,
+                            num_guesses=num)
+        
 
         letters.append(letter)
 
@@ -219,11 +238,31 @@ def update_guess(guess, indexes, letter):
 
     return guess
 
+def clean_data(data):
+    
+    data = data.lower()
+    data = data.strip()
+    return data
+
+
+def is_dupilicate(data, used):
+    """checks to see if the entered data has been entered before.
+        Returns T if seen before. F if new."""
+
+    dup = False
+
+    old = set(used)
+
+    if data in old:
+        dup = True
+
+    return dup
+
 if __name__ == "__main__":
     # We have to set debug=True here, since it has to be True at the point
     # that we invoke the DebugToolbarExtension
-    # app.debug = True
-    app.debug = False
+    app.debug = True
+    # app.debug = False
 
     connect_to_db(app)
 
