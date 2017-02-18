@@ -1,11 +1,12 @@
+
+
 ul {
     list-style-type: none;
 }
 
-div {
-    border: 1px solid #803a17;
-}
-div#hang {
-    display: inline;
-}
 
+#word {
+    text-align: center;
+    letter-spacing: .5em;
+    font-size: 2em;
+}
