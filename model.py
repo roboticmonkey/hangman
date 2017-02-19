@@ -47,13 +47,12 @@ def generate_wordlist(difficulty):
     """access API to retrieve list of words"""
 
     payload = {'difficulty': difficulty,
-                'minLength': 4,
+                'minLength': 3,
                 'maxLength': None,
                 'start': None,
                 'count': None}
     r = requests.get('http://linkedin-reach.hagbpyjegb.us-west-2.elasticbeanstalk.com/words', params=payload)
 
-    # self.book = r.text.split()
     wordlist = r.text
     return wordlist
 

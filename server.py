@@ -1,4 +1,4 @@
-""" Server File """
+""" Server for Hangman """
 
 from jinja2 import StrictUndefined
 from flask import Flask, render_template, session, request, redirect, flash
@@ -404,8 +404,8 @@ def words_match(secret_word, word):
 if __name__ == "__main__":
     # We have to set debug=True here, since it has to be True at the point
     # that we invoke the DebugToolbarExtension
-    app.debug = True
-    # app.debug = False
+    # app.debug = True
+    app.debug = False
 
     connect_to_db(app)
 
