@@ -6,7 +6,7 @@
         <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css"
           rel="stylesheet">
         <link href="/static/stylesheet2.css" rel="stylesheet">
-        <script type="text/javascript" src="http://code.jquery.com/jquery.js"></script>
+        
     </head>
 
     <body>
@@ -14,16 +14,22 @@
             <div class="row">
             <h1>Welcome to Hangperson!</h1>
             </div>
-            {% with messages = get_flashed_messages() %}
-                {% if messages %}
-                    <ul class=flashes>
-                        {% for message in messages %}
-                         <li>{{ message }}</li>
-                        {% endfor %}
-                    </ul>
-    
-                {% endif %}
-            {% endwith %}
+            <div class="row">
+                <div class="col-lg-6 col-md-6 ">
+                    {% with messages = get_flashed_messages() %}
+                        {% if messages %}
+                            <ul class="flashes bg-danger" >
+                                {% for message in messages %}
+                                 <li >{{ message }}</li>
+                                {% endfor %}
+                            </ul>
+            
+                        {% endif %}
+                    {% endwith %}
+                    </div>
+                    <div class="col-lg-6 col-md-6">
+                    </div>
+            </div>
             <div class="row" id="main">
 
         

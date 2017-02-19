@@ -96,8 +96,6 @@ def playing_game():
     
     letters = session['letters']
     
-    
-
     if not game_over(num, secret_word, guess):
 
         letter = request.form.get('letter')
@@ -112,7 +110,6 @@ def playing_game():
                             missed=letters,
                             num_guesses=num)
 
-        
         if not letter.isalpha():
             flash("You must enter only letters.")
             guess_word = convert_to_string(guess)
@@ -122,21 +119,37 @@ def playing_game():
                             missed=letters,
                             num_guesses=num)
         
+       
+        if len(letter) > 1:
+            if words_match(secret_word, letter):
+                guess = letter
+                over = True
+                winner = True
 
-        letters.append(letter)
+                return render_template('game.html', 
+                                guess=guess, 
+                                missed=letters,
+                                num_guesses=num,
+                                win=winner,
+                                over=over)
+            else:
 
-        indexes = find_letter_in_word(secret_word, letter)
-
-        if indexes:
-            guess = update_guess(guess,indexes, letter)
-            session['guess'] = guess
-            
-
+                num -= 1
+                session['num_left'] = num
         else:
-            num -= 1
-            session['num_left'] = num
-        
-        
+
+            indexes = find_letter_in_word(secret_word, letter)
+
+            if indexes:
+                guess = update_guess(guess,indexes, letter)
+                session['guess'] = guess
+                
+
+            else:
+                num -= 1
+                session['num_left'] = num
+            
+        letters.append(letter)
         session['letters'] = letters
 
     guess_word = convert_to_string(guess)
@@ -249,14 +262,22 @@ def is_dupilicate(data, used):
     """checks to see if the entered data has been entered before.
         Returns T if seen before. F if new."""
 
-    dup = False
-
     old = set(used)
 
     if data in old:
-        dup = True
+        return True
 
-    return dup
+    return False
+
+def words_match(secret_word, word):
+    """Takes secret_word(as a list) word(as a string).
+        Returns True if they match. False if they dont."""
+
+    secret = convert_to_string(secret_word)
+    if secret == word:
+        return True
+    else:
+        return False
 
 if __name__ == "__main__":
     # We have to set debug=True here, since it has to be True at the point
